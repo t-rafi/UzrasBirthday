@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#080f1a">
 <title>For Uzra — October 26</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -109,6 +110,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--navy)}
 #musicToggle{position:fixed;top:18px;right:18px;z-index:20;border:1px solid rgba(200,150,62,.45);border-radius:24px;padding:10px 15px;background:rgba(8,15,26,.8);color:var(--cream);font:10px "Inter",sans-serif;letter-spacing:.08em;cursor:pointer;backdrop-filter:blur(8px)}
 #musicToggle:focus-visible{outline:2px solid var(--gold-l);outline-offset:4px}
 </style>
+<link rel="stylesheet" href="phone-polish.css">
 </head>
 <body>
 <button id="musicToggle" type="button" aria-pressed="false" aria-label="Play birthday music">♫ sound off</button>
@@ -147,10 +149,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--navy)}
 
   <section class="section" id="s4">
     <div class="letter-box">
-      <div class="lseal">✦</div>
+      <h1 class="letter-name">Uzra,</h1>
       <div class="ldate">26 Oct, 2026</div>
 <div class="lbody" id="lbody">
-    <p>Jonmodinher shubhechha to shobai dibe, but ami chai amar shubhechhata tor kache ektu alada hok. Karon tui to ar shobar moto keu na amar kache.</p>
+    <p>Jonmodiner shubhechha to shobai dibe, but ami chai amar shubhechhata tor kache ektu alada hok. Karon tui to ar shobar moto keu na amar kache.</p>
 
     <p>Asole toke pawar por theke amar majhe majhe mone hoy, Allah amake amar jiboner shobcheye shundor ekta manush diyeche. Amar chokhe tui-i amar Miss Universe, ar toke ami koto ta bhalobashi sheta hoyto shob shomoy bujhaiteo pari na, Uzra. ❤️</p>
 
@@ -223,7 +225,7 @@ const VID2="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAA
 // SLIDESHOW SETUP
 // =====================
 const SS = document.getElementById("slideshow");
-const BG_PHOTOS = PHOTOS.filter((_,i) => i % 3 === 0);
+const BG_PHOTOS = [PHOTOS[22], ...PHOTOS.filter((_,i) => i % 3 === 0 && i !== 0)];
 const slideItems = [];
 BG_PHOTOS.forEach((p,i) => {
   slideItems.push({type:"photo", src:p});
@@ -235,7 +237,7 @@ const slideEls = [];
 slideItems.forEach((item,i) => {
   const div = document.createElement("div");
   div.className = "slide" + (item.type==="video" ? " vid-slide" : "");
-  if(i===0) div.classList.add("active");
+  if(i===0) div.classList.add("active", "opening-photo");
   if(item.type==="photo"){
     div.style.backgroundImage = `url(${item.src})`;
   } else {
@@ -246,7 +248,7 @@ slideItems.forEach((item,i) => {
     v.playsInline = true;
     v.setAttribute("playsinline","");
     v.setAttribute("webkit-playsinline","");
-    v.autoplay = true;
+    v.autoplay = false;
     div.appendChild(v);
   }
   SS.appendChild(div);
@@ -259,7 +261,9 @@ let curSlide = 0;
 function tryPlayAll(){
   slideEls.forEach(el => {
     const v = el.querySelector("video");
-    if(v) v.play().catch(()=>{});
+    if(!v) return;
+    if(el.classList.contains("active") && !document.hidden && !document.getElementById("s3").classList.contains("active")) v.play().catch(()=>{});
+    else v.pause();
   });
 }
 // iOS/Android: need user gesture to unlock autoplay
@@ -276,11 +280,11 @@ document.addEventListener("click", unlockMedia, {once:true});
 tryPlayAll();
 
 function nextSlide(){
+  if(document.hidden || document.getElementById("s1").classList.contains("active")) return;
   slideEls[curSlide].classList.remove("active");
   curSlide = (curSlide+1) % slideEls.length;
   slideEls[curSlide].classList.add("active");
-  const v = slideEls[curSlide].querySelector("video");
-  if(v) v.play().catch(()=>{});
+  tryPlayAll();
 }
 if(!window.matchMedia("(prefers-reduced-motion:reduce)").matches){
   setInterval(nextSlide, 5500);
@@ -288,8 +292,7 @@ if(!window.matchMedia("(prefers-reduced-motion:reduce)").matches){
 
 // =====================
 // GALLERY VIDEOS
-// — use <video> with controls, NO autoplay here
-// — tap-to-play on mobile works natively with controls
+// Inline playback is managed by phone-media.js when this section is visible.
 // =====================
 const vidRow = document.getElementById("vidRow");
 [VID1, VID2].forEach(src => {
@@ -302,7 +305,11 @@ const vidRow = document.getElementById("vidRow");
   v.setAttribute("playsinline","");
   v.setAttribute("webkit-playsinline","");
   v.preload = "metadata";
-  // NOT setting autoplay here — user taps to play
+  v.muted = true;
+  v.defaultMuted = true;
+  v.setAttribute("muted", "");
+  v.loop = true;
+  v.setAttribute("aria-label", "A video memory with Uzra");
   card.appendChild(v);
   const cap = document.createElement("div");
   cap.className = "vcap";
@@ -339,8 +346,16 @@ function goTo(n){
   cur = n;
   document.getElementById(SECS[cur]).classList.add("active");
   dots[cur].classList.add("on");
+  SECS.forEach((id, i) => {
+    const section = document.getElementById(id);
+    section.inert = i !== cur;
+    section.setAttribute("aria-hidden", String(i !== cur));
+    dots[i].setAttribute("aria-current", i === cur ? "step" : "false");
+  });
   if(cur===3) revealLetter();
   if(cur===2) document.getElementById("s3").scrollTop = 0;
+  tryPlayAll();
+  document.dispatchEvent(new CustomEvent("sectionchange", {detail:{index:cur}}));
 }
 dots.forEach(d => d.addEventListener("click", () => goTo(+d.dataset.s)));
 document.getElementById("btnOpen").addEventListener("click", () => { unlockMedia(); goTo(1); });
@@ -373,10 +388,12 @@ function revealLetter(){
 
 // Keyboard
 document.addEventListener("keydown", e => {
-  if(e.key==="ArrowRight"||e.key==="ArrowDown"){if(cur<4)goTo(cur+1)}
-  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"){if(cur>0)goTo(cur-1)}
+  if(e.target.closest("video, button")) return;
+  if(e.key==="ArrowRight"){if(cur<4)goTo(cur+1)}
+  else if(e.key==="ArrowLeft"){if(cur>0)goTo(cur-1)}
 });
 </script>
+<script src="phone-media.js"></script>
 <script src="birthday-music.js"></script>
 </body>
 </html>

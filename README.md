@@ -1,13 +1,15 @@
 # For Uzra — October 26
 
-A personal birthday surprise from Rafi: illustrated cover, a memory album, two films, a handwritten letter, and an interactive birthday wish.
+A personal birthday surprise from Rafi, presented as six separate screens:
+opening → birthday greeting → videos → photo album → personal letter → candle wish.
 
-Open `index.html` through any static server (for example `python -m http.server 4173`). No build step or dependencies are needed. GitHub Pages can serve the repository root directly.
+Only the active screen is visible. Continue buttons move forward, and the footer button goes back. The album has previous/next photo controls, keyboard arrows, and a full-size viewer. The last screen can restart the experience.
 
-- `style.css`: responsive design and reduced-motion support.
-- `app.js`: photo viewer, progressive gallery, candle confetti, viewport video playback, and a locally synthesized birthday melody.
-- `memories.js` and `assets/`: original photos and videos extracted from the old embedded page.
+Run `python -m http.server 4173` and open http://localhost:4173. No build step is needed; GitHub Pages serves the repository root.
 
-Audio starts after tapping **Open your surprise** or **Sound off**, because browsers require a user gesture for audible playback. Videos play muted when visible, with native controls for sound. Unmuting a film pauses the birthday music. Visitors who prefer reduced motion can start videos manually.
+- `index.html`: screens and original personal letter.
+- `style.css`: responsive design, transitions, and reduced-motion support.
+- `app.js`: step navigation, album, candle, video playback, and locally synthesized birthday melody.
+- `memories.js` and `assets/`: original 30 photos and two videos.
 
-Edit the personal letter directly in `index.html`. No personal media is sent to external services.
+Music starts after the opening button or sound button is tapped. Videos play muted on the video screen and pause when leaving it. Native controls allow original video sound; unmuting pauses the melody. Reduced-motion visitors start videos manually.

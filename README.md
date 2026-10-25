@@ -1,15 +1,18 @@
 # For Uzra — October 26
 
-A personal birthday surprise from Rafi, presented as six separate screens:
-opening → birthday greeting → videos → photo album → personal letter → candle wish.
+A personal birthday website.
 
-Only the active screen is visible. Continue buttons move forward, and the footer button goes back. The album has previous/next photo controls, keyboard arrows, and a full-size viewer. The last screen can restart the experience.
+## Deploy to GitHub Pages
 
-Run `python -m http.server 4173` and open http://localhost:4173. No build step is needed; GitHub Pages serves the repository root.
+1. Upload all files to a new GitHub repository
+2. Go to Settings → Pages → Source: Deploy from branch → main → / (root)
+3. Wait 2–3 minutes → share the link
 
-- `index.html`: screens and original personal letter.
-- `style.css`: responsive design, transitions, and reduced-motion support.
-- `app.js`: step navigation, album, candle, video playback, and locally synthesized birthday melody.
-- `memories.js` and `assets/`: original 30 photos and two videos.
+## Edit the letter
 
-Music starts after the opening button or sound button is tapped. Videos play muted on the video screen and pause when leaving it. Native controls allow original video sound; unmuting pauses the melody. Reduced-motion visitors start videos manually.
+Open `index.html`, search for `Uzra,` — edit the letter paragraphs inside `<div class="lbody">`.
+
+## Add captions to photos
+
+Search for `const captions = [` — fill in the empty strings with your captions.
+# UzrasBirthday

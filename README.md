@@ -1,18 +1,13 @@
 # For Uzra — October 26
 
-A personal birthday website.
+A personal birthday surprise from Rafi: illustrated cover, a memory album, two films, a handwritten letter, and an interactive birthday wish.
 
-## Deploy to GitHub Pages
+Open `index.html` through any static server (for example `python -m http.server 4173`). No build step or dependencies are needed. GitHub Pages can serve the repository root directly.
 
-1. Upload all files to a new GitHub repository
-2. Go to Settings → Pages → Source: Deploy from branch → main → / (root)
-3. Wait 2–3 minutes → share the link
+- `style.css`: responsive design and reduced-motion support.
+- `app.js`: photo viewer, progressive gallery, candle confetti, viewport video playback, and a locally synthesized birthday melody.
+- `memories.js` and `assets/`: original photos and videos extracted from the old embedded page.
 
-## Edit the letter
+Audio starts after tapping **Open your surprise** or **Sound off**, because browsers require a user gesture for audible playback. Videos play muted when visible, with native controls for sound. Unmuting a film pauses the birthday music. Visitors who prefer reduced motion can start videos manually.
 
-Open `index.html`, search for `Uzra,` — edit the letter paragraphs inside `<div class="lbody">`.
-
-## Add captions to photos
-
-Search for `const captions = [` — fill in the empty strings with your captions.
-# UzrasBirthday
+Edit the personal letter directly in `index.html`. No personal media is sent to external services.
